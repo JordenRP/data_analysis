@@ -4,23 +4,18 @@ import seaborn as sns
 from scipy.stats import linregress
 
 def analyze_data(filepath):
-    # Загружаем очищенные данные
     df = pd.read_csv(filepath)
     
-    # Преобразуем столбцы в числовой формат, если это необходимо
     df['Год'] = pd.to_numeric(df['Год'], errors='coerce')
     df['Average_Salary'] = pd.to_numeric(df['Average_Salary'], errors='coerce')
     
-    # Удаляем строки с некорректными значениями после преобразования
     df = df.dropna(subset=['Год', 'Average_Salary'])
     
-    # Проверка данных по месяцам
     months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
     
     print("Проверка данных по месяцам:")
     print(df[months].describe())
     
-    # Визуальный анализ различий между месяцами
     plt.figure(figsize=(14, 8))
     for month in months:
         plt.plot(df['Год'], df[month], label=month)
@@ -32,7 +27,6 @@ def analyze_data(filepath):
     plt.savefig('data/processed/monthly_salary_trends.png')
     print("График динамики по месяцам сохранен в 'data/processed/monthly_salary_trends.png'")
     
-    # Корреляционный анализ между месяцами
     corr_matrix = df[months].corr()
     plt.figure(figsize=(12, 8))
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.4f')
